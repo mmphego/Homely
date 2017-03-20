@@ -1,0 +1,25 @@
+TempMonitorIntent what the current temperature in the {room} is
+TempMonitorIntent what is the current temperature in the {room}
+TempMonitorIntent the current temperature in the {room}
+TempMonitorIntent what is the temperature in the {room}
+TempMonitorIntent what is the temperature in {room}
+TempMonitorIntent how does it feel like in the {room}
+TempMonitorIntent what's the temperature in the {room}
+GPIOControlIntent to turn pin {pin} {status}
+GPIOControlIntent to switch pin {pin} {status}
+GPIOControlIntent to turn light {pin} {status}
+GPIOControlIntent to switch light {pin} {status}
+PlayRadioIntent turn radio {state}
+PlayRadioIntent {state} to radio
+PlayRadioIntent radio {state}
+DriveTimeIntent what is my driving time from {origin} to {dest}
+DriveTimeIntent what is my driving time from {dest} to {origin}
+DriveTimeIntent what's my driving time from {dest} to {origin}
+DriveTimeIntent what's my driving time from {origin} to {dest}
+DriveTimeIntent my commute from {origin} to {dest}
+DriveTimeIntent my commute from {dest} to {origin}
+GetNewsIntent what's the latest news headlines
+GetNewsIntent the latest news headlines
+GetNewsIntent read news
+GetNewsIntent what's on the news
+GetNewsIntent what is the latest news

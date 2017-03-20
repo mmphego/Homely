@@ -1,0 +1,16 @@
+# Download Node.js source Raspberry Pi Model A, B, B+ and Compute Module
+
+wget -qO- https://nodejs.org/dist/latest/node-v7.4.0-linux-armv6l.tar.gz | tar xvz
+cd node-v7.4.0*
+
+# Raspberry Pi 2 Model B
+
+wget https://nodejs.org/dist/latest/node-v7.4.0-linux-armv7l.tar.gz | tar xzv
+cd node-v7.4.0-linux-armv7l
+
+# and lastly
+sudo cp -Rv * /usr/local/
+
+# That's it! To check Node.js is properly installed and you have the right version, run the command:
+
+node -v

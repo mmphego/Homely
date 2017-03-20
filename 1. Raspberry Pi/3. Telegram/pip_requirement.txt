@@ -1,0 +1,6 @@
+telepot
+cleverbot
+gtts
+feedparser
+googlemaps
+yaml

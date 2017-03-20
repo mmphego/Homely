@@ -1,0 +1,13 @@
+Broker host: mqtt.dioty.co
+
+Broker port: 1883
+
+Secure Broker port: 8883. Please download the ca_cert file from GitHub
+
+WebSockets port: 8080
+
+User id: mpho112@gmail.com
+
+Your root topic: "/mpho112@gmail.com/"
+
+Password: d21475c0

@@ -1,0 +1,45 @@
+{
+  "intents":
+    [
+      {
+        "intent": "GPIOControlIntent",
+        "slots": [{"name": "status",
+                   "type": "GPIO_CONTROL"},
+                  {"name": "pin",
+                   "type": "AMAZON.NUMBER"
+                 }]
+        },
+        {
+          "intent": "TempMonitorIntent",
+          "slots": [{"name": "room",
+                     "type": "TEMP_MONITOR"
+                   }]
+        },
+        {
+          "intent": "PlayRadioIntent",
+          "slots": [{"name": "state",
+                     "type": "PLAY_RADIO"
+                   }]
+        },
+        {
+          "intent": "DriveTimeIntent",
+          "slots": [{"name": "origin",
+                     "type": "DRIVING_TIME"},
+                    {"name": "dest",
+                     "type": "DRIVING_TIME"
+                   }]
+        },
+        {
+          "intent": "AmbientLightIntent",
+          "slots": [{"name": "status",
+                     "type": "GPIO_CONTROL"
+                   }]
+        },
+        {
+          "intent": "GetNewsIntent"
+        },
+        {
+          "intent": "HomelyIntroIntent"
+        },
+    ]
+}

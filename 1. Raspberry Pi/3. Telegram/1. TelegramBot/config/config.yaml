@@ -1,0 +1,36 @@
+# Personal Details
+username: Mpho
+
+# Mobile MAC Address
+presenceDetect:
+    Mpho        : bc:44:86:dd:8c:fc
+    Tshilidzi   : 48:5a:3f:7f:e7:9d
+
+
+# geographic location
+geography:
+    city: Cape Town
+    country: SA
+    code: 7405
+    coord: -34.0475, 18.4525
+
+# Available APIs
+APIs:
+    openWeatherAPI: 220de03e6993731b3b2ea2b9cfb19033
+    adafruit_api: fbc00d70ebd4a9ebd793745a696af02
+
+server_mac: ee:b7:b8:74:0c:c6
+
+RelaysSetup:
+    Relay1: 22
+    Relay2: 23
+    Relay3: 24
+    Relay4: 25
+
+# Google traveling itinerary
+googlemaps_api: AIzaSyDcBuwDu4Jp0eIHHG4r3EtfYYF47M5WNrs
+origin_address: SKA South Africa, Pinelands, South Africa
+dest_address: 14 Derrick Drive, Somerset West, South Africa
+
+enableTTS : False
+debugEnabled : True
