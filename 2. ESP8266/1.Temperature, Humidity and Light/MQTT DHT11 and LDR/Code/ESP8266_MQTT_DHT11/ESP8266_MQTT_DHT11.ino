@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ArduinoOTA.h>
@@ -18,14 +16,15 @@
 #include <Average.h>
 dht DHT;
 
-#define   mqtt_server_1   "alexapi"
+#define   Hostname        "mainroom-temp-sensor"
+#define   MasterPass      "ESP8266"
 
+// MQTT 
+#define   mqtt_topic    "home/mainbedroom/temp"
+#define   mqtt_server_1   "alexapi"
 #define   mqtt_server_1   "192.168.1.9"
 // Testing broker
 //const char* mqtt_server_1 = "test.mosquitto.org";
-
-// MQTT Topics
-#define   mqtt_topic    "home/mainbedroom/temp"
 
 // Define NodeMCU D5 pin to as temperature data pin of  DHT11
 #define   DHT11_PIN     D0
@@ -56,19 +55,28 @@ PubSubClient client(espClient);
 
 void setup() {
   Serial.begin(115200);
-  setup_GPIO();
-  setup_WiFi();
+  pinMode(Statusled, OUTPUT);
+  DHT.read11(DHT11_PIN);
   setup_OTA();
+  setup_WiFi();
   setup_MQTT();
 }
 
-void setup_OTA(){
+void setup_OTA() {
   // Port defaults to 8266
-  // ArduinoOTA.setPort(8266);
-  // Hostname defaults to esp8266-[ChipID]
-  ArduinoOTA.setHostname("Temp_Hum_Sensor-01");
-  ArduinoOTA.onStart([]() { Serial.println("Start OTA"); });
-  ArduinoOTA.onEnd([]() { Serial.println("End OTA"); });
+  ArduinoOTA.setPort(8266);
+  // Hostname to Temp_Hum_Sensor-01
+  ArduinoOTA.setHostname(Hostname);
+  // Enable authentication
+  ArduinoOTA.setPassword(MasterPass);
+  //Sets if the device should be rebooted after successful update. 
+  ArduinoOTA.setRebootOnSuccess(true);
+  ArduinoOTA.onStart([]() {
+    Serial.println("Start OTA");
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("End OTA");
+  });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
   });
@@ -82,21 +90,15 @@ void setup_OTA(){
     else if (error == OTA_END_ERROR) Serial.println("End Failed");
   });
   ArduinoOTA.begin();
-
 }
-
-void setup_GPIO(){
-  pinMode(Statusled, OUTPUT);
-  DHT.read11(DHT11_PIN);
-  }
 
 void setup_WiFi() {
   // Connect to WiFi access point.
   WiFiManager wifiManager;
   Serial.print("WiFi Reset status: ");
   Serial.print(wifi_reset);
-  if (wifi_reset == 1){
-  //reset settings - assign a button for this.
+  if (wifi_reset == 1) {
+    //reset settings - assign a button for this.
     wifiManager.resetSettings();
     wifi_reset = 0;
   }
@@ -105,10 +107,10 @@ void setup_WiFi() {
   //in seconds
   wifiManager.setTimeout(180);
   // Connect to WiFi access point.
-  if (!wifiManager.autoConnect("Temp_Sensor", "ESP8266")) {
+  if (!wifiManager.autoConnect(Hostname, MasterPass)) {
     Serial.println("failed to connect, we should reset as see if it connects");
     delay(3000);
-    ESP.reset();
+    ESP.restart();
     delay(5000);
   }
 
@@ -118,10 +120,10 @@ void setup_WiFi() {
   //Serial.println(ssid_1);
   Serial.print("Connecting.");
   while (WiFi.status() != WL_CONNECTED) {
-    digitalWrite(Statusled, LOW);
-    delay(250);
     digitalWrite(Statusled, HIGH);
-    delay(250);
+    delay(50);
+    digitalWrite(Statusled, LOW);
+    delay(50);
     Serial.print(".");
   }
   Serial.println();
@@ -146,7 +148,7 @@ void reconnect() {
   Serial.print("Pinging MQTT BrokerIP: ");
   Serial.print(mqtt_server_1);
 
-  if(Ping.ping(mqtt_server_1)){
+  if (Ping.ping(mqtt_server_1)) {
     Serial.println(" Ok!!!");
     // Loop until we're reconnected
     while (!client.connected()) {
@@ -158,11 +160,12 @@ void reconnect() {
       // Attempt to connect
       //if you MQTT broker has clientID,username and password_1
       //please change following line to    if (client.connect(clientId, userName, password_1))
-      if (client.connect(clientId.c_str())){
+      if (client.connect(clientId.c_str())) {
+        //Serial.println(clientId.c_str());
         Serial.println("connected...");
-        Serial.println("and subscribe to topic: ");
-        Serial.print(mqtt_topic);
-       //once connected to MQTT broker, subscribe command if any
+        Serial.print("and subscribe to topic: ");
+        Serial.println(mqtt_topic);
+        //once connected to MQTT broker, subscribe command if any
         client.subscribe(mqtt_topic);
       }
       else {
@@ -218,25 +221,26 @@ void loop() {
 
   // calculate the average of samples
   for (int i = 0; i < Samples; i++) {
-      //Serial.print(ave_temp.get(i));
-      ave_temp.get(i);
-      //Serial.print(ave_hum.get(i));
-      ave_hum.get(i);
-      //Serial.print(ave_ldr.get(i));
-      ave_ldr.get(i);
+    //Serial.print(ave_temp.get(i));
+    ave_temp.get(i);
+    //Serial.print(ave_hum.get(i));
+    ave_hum.get(i);
+    //Serial.print(ave_ldr.get(i));
+    ave_ldr.get(i);
   }
 
   count += 1;
   if (count > Samples) {
-      String msg = "Temperature:";
-      msg = msg + ave_temp.mean();
-      msg = msg + ",Humidity:" ;
-      msg = msg + ave_hum.mean();
-      msg = msg + (",light:") + ave_ldr.mean();
-      msg.toCharArray(message, 65);
-      Serial.println(message);
-      //publish sensor data to MQTT broker
-      client.publish(mqtt_topic, message);
-      count = 0;
-   }
+    String msg = "Temperature:";
+    msg = msg + ave_temp.mean();
+    msg = msg + ",Humidity:" ;
+    msg = msg + ave_hum.mean();
+    msg = msg + (",light:") + ave_ldr.mean();
+    msg.toCharArray(message, 65);
+    Serial.println(message);
+    //publish sensor data to MQTT broker
+    client.publish(mqtt_topic, message);
+    count = 0;
+  }
 }
+
